@@ -1,15 +1,16 @@
-//go:generate enumer -json -trimprefix Color -transform snake -type Color -output models_string.go
 package models
 
-type Color int
-
 const (
-	ColorBlue Color = iota
-	ColorGreen
-	ColorDeepRed
-	ColorWarmWhite
-	ColorCoolWhite
+	ColorBlue      = "blue"
+	ColorGreen     = "green"
+	ColorDeepRed   = "deep_red"
+	ColorWarmWhite = "warm_white"
+	ColorCoolWhite = "cool_white"
 )
+
+func ColorValues() []string {
+	return []string{ColorBlue, ColorGreen, ColorDeepRed, ColorWarmWhite, ColorCoolWhite}
+}
 
 type Time struct {
 	Seconds  int    `json:"seconds"`
@@ -27,7 +28,7 @@ type Schedule struct {
 }
 
 type Ramp struct {
-	Color  Color   `json:"color"`
+	Color  string  `json:"color"`
 	Points []Point `json:"points"`
 }
 
@@ -50,4 +51,3 @@ type LunarSchedule struct {
 	Start  int  `json:"start"`
 	End    int  `json:"end"`
 }
-

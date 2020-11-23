@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/BurntSushi/toml"
-	"github.com/kr/pretty"
 	"github.com/nathan-osman/go-sunrise"
 
 	"github.com/sgtsquiggs/go-aiprime/client"
@@ -18,8 +17,6 @@ import (
 )
 
 var (
-	DebugFlag  = flag.Bool("debug", false, "debug mode")
-	Debug      = false
 	ConfigFlag = flag.String("config", "", "config path")
 	Config     = &config.Config{}
 	Client     *client.Client
@@ -41,16 +38,14 @@ func updateTime(ctx context.Context) {
 	_, err := Client.Time.Update(ctx, timeRequest)
 	if err != nil {
 		log.Printf("error updating time: %v", err)
-	} else if Debug {
-		_, _ = pretty.Print(timeRequest)
 	}
 }
 
 func updateSchedule(ctx context.Context) {
 	var (
-		riseInt = make(map[models.Color]float64)
-		midInt  = make(map[models.Color]float64)
-		setInt  = make(map[models.Color]float64)
+		riseInt = make(map[string]float64)
+		midInt  = make(map[string]float64)
+		setInt  = make(map[string]float64)
 	)
 	for _, color := range models.ColorValues() {
 		riseInt[color] = 0.05
@@ -145,8 +140,11 @@ func main() {
 		log.Fatalf("invalid device url: %v", err)
 	}
 
-	ctx := context.TODO()
+	deadline := time.Now().Add(15 * time.Second)
+	ctx, cancel := context.WithDeadline(context.Background(), deadline)
 
 	updateTime(ctx)
 	updateSchedule(ctx)
+
+	cancel()
 }

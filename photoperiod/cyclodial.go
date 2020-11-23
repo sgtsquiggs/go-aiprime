@@ -1,20 +1,21 @@
 package photoperiod
 
 import (
+	"errors"
+	"fmt"
 	"math"
 	"time"
 
 	"github.com/nathan-osman/go-sunrise"
-	"github.com/pkg/errors"
 
 	"github.com/sgtsquiggs/go-aiprime/config"
 	"github.com/sgtsquiggs/go-aiprime/models"
 )
 
 type CyclodialPhotoperiod struct {
-	SunriseIntensity map[models.Color]float64
-	MiddayIntensity  map[models.Color]float64
-	SunsetIntensity  map[models.Color]float64
+	SunriseIntensity map[string]float64
+	MiddayIntensity  map[string]float64
+	SunsetIntensity  map[string]float64
 	MinimumPeriod    time.Duration
 	MaximumPeriod    time.Duration
 	Resolution       int
@@ -49,7 +50,7 @@ func (p *CyclodialPhotoperiod) Schedule() (*models.Schedule, error) {
 			setMap[color],
 			p.Resolution)
 		if err != nil {
-			return nil, errors.Wrapf(err, "error generating ramp %v", color.String())
+			return nil, fmt.Errorf("error generating ramp %s: %w", color, err)
 		}
 		ramp := models.Ramp{Color: color, Points: points}
 		ramps = append(ramps, ramp)

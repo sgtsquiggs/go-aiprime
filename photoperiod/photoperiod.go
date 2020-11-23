@@ -29,8 +29,8 @@ func percentToIntensity(p float64) int {
 	return int(math.Round(1000 * p))
 }
 
-func fixIntensityMap(mp map[models.Color]float64) map[models.Color]int {
-	mi := make(map[models.Color]int, len(models.ColorValues()))
+func fixIntensityMap(mp map[string]float64) map[string]int {
+	mi := make(map[string]int, len(models.ColorValues()))
 	for _, color := range models.ColorValues() {
 		p, ok := mp[color]
 		if ok {
